@@ -1,25 +1,37 @@
 const db = require("../config/db");
+const pusher = require("../config/pusher");
 
 const sendMessage = async (req, res) => {
   const { sender_id, receiver_id, message } = req.body;
+
   try {
+    // Fixed SQL query: Replaced curly braces with parentheses
     await db.query(
       "INSERT INTO Messages (sender_id, receiver_id, message) VALUES (?, ?, ?)",
       [sender_id, receiver_id, message]
     );
+
+    // Fixed Pusher trigger: Used template literals correctly
+    pusher.trigger(`chat-${receiver_id}`, "new-message", { sender_id, message });
+
     res.status(201).json({ message: "Message sent successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Error sending message:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
 const getMessages = async (req, res) => {
   const { user_id } = req.params;
   try {
-    const [messages] = await db.query("SELECT * FROM Messages WHERE receiver_id = ?", [user_id]);
+    const [messages] = await db.query(
+      "SELECT * FROM Messages WHERE sender_id = ? OR receiver_id = ? ORDER BY timestamp",
+      [user_id, user_id]
+    );
     res.status(200).json(messages);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Error fetching messages:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 

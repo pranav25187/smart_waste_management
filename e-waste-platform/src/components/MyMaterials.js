@@ -7,7 +7,9 @@ const MyMaterials = () => {
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/materials");
+        const response = await axios.get("http://localhost:5000/api/materials/my", {
+          params: { user_id: localStorage.getItem("user_id") },
+        });
         setMaterials(response.data);
       } catch (error) {
         console.error("Error fetching materials:", error);
@@ -18,7 +20,7 @@ const MyMaterials = () => {
   }, []);
 
   return (
-    <div>
+    <div className="my-materials">
       <h2>My Materials</h2>
       <ul>
         {materials.map((material) => (

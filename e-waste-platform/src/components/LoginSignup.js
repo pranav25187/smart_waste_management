@@ -1,59 +1,116 @@
-import React, { useState } from 'react';
-import { login, signup } from '../api';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginSignup = () => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    role: '',
-    location: '',
-  });
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Manufacturer");
+  const [location, setLocation] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      if (isLogin) {
-        const response = await login(formData.email, formData.password);
-        alert('Login successful');
-        // Redirect to the dashboard
-        navigate('/dashboard'); // Redirect to the dashboard
-      } else {
-        await signup(formData.email, formData.password, formData.role, formData.location);
-        alert('Signup successful');
-      }
-    } catch (error) {
-      alert('Error: ' + error.response.data.message);
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
+
+      // Save user data to localStorage
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("user_id", response.data.user.user_id); // Save user_id for later use
+
+      // Redirect to the Dashboard page
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Invalid credentials");
+    }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:5000/api/auth/signup", {
+        name,
+        email,
+        password,
+        role,
+        location,
+        mobile_no: mobileNo,
+      });
+
+      // Redirect to the Login page after successful signup
+      navigate("/login");
+    } catch (err) {
+      setError("Signup failed");
     }
   };
 
   return (
-    <div>
-      <h2>{isLogin ? 'Login' : 'Signup'}</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+    <div className="auth-container">
+      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+      <form onSubmit={isLogin ? handleLogin : handleSignup}>
         {!isLogin && (
           <>
-            <input type="text" name="role" placeholder="Role" onChange={handleChange} required />
-            <input type="text" name="location" placeholder="Location" onChange={handleChange} required />
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Mobile No"
+              value={mobileNo}
+              onChange={(e) => setMobileNo(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+            />
           </>
         )}
-        <button type="submit">{isLogin ? 'Login' : 'Signup'}</button>
-        <button type="button" onClick={() => setIsLogin(!isLogin)}>
-          Switch to {isLogin ? 'Signup' : 'Login'}
-        </button>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        {!isLogin && (
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="Manufacturer">Manufacturer</option>
+            <option value="Buyer">Buyer</option>
+          </select>
+        )}
+        <button type="submit">{isLogin ? "Login" : "Sign Up"}</button>
       </form>
+      <p>
+        {isLogin ? "Don't have an account? " : "Already have an account? "}
+        <button onClick={() => setIsLogin(!isLogin)}>
+          {isLogin ? "Sign Up" : "Login"}
+        </button>
+      </p>
+      {error && <p className="error">{error}</p>}
     </div>
   );
 };
 
 export default LoginSignup;
-
-

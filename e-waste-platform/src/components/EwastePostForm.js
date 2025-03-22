@@ -1,54 +1,105 @@
-import React, { useState } from 'react';
-import { createEwaste } from '../api';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const EwastePostForm = () => {
-  const [formData, setFormData] = useState({
-    user_id: '',
-    item_name: '',
-    type: '',
-    quantity: '',
-    condition: '',
-    description: '',
-    price: '',
-    available_dates: '',
-    image: null,
-  });
-
-  const handleChange = (e) => {
-    if (e.target.name === 'image') {
-      setFormData({ ...formData, image: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
-  };
+  const [itemName, setItemName] = useState("");
+  const [type, setType] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [condition, setCondition] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [availableDates, setAvailableDates] = useState("");
+  const [image, setImage] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
+    const formData = new FormData();
+    formData.append("item_name", itemName);
+    formData.append("type", type);
+    formData.append("quantity", quantity);
+    formData.append("condition", condition);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("available_dates", availableDates);
+    if (image) {
+      formData.append("image", image);
     }
+
     try {
-      await createEwaste(formDataToSend);
-      alert('E-Waste posted successfully');
+      // Removed the unused 'response' variable
+      await axios.post("http://localhost:5000/api/ewaste", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("E-Waste posted successfully");
+      navigate("/dashboard");
     } catch (error) {
-      alert('Error: ' + error.response.data.message);
+      console.error("Error posting e-waste:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="user_id" placeholder="User  ID" onChange={handleChange} required />
-      <input type="text" name="item_name" placeholder="Item Name" onChange={handleChange} required />
-      <input type="text" name="type" placeholder="Type" onChange={handleChange} required />
-      <input type="number" name="quantity" placeholder="Quantity" onChange={handleChange} required />
-      <input type="text" name="condition" placeholder="Condition" onChange={handleChange} required />
-      <textarea name="description" placeholder="Description" onChange={handleChange} required />
-      <input type="number" name="price" placeholder="Price" onChange={handleChange} required />
-      <input type="text" name="available_dates" placeholder="Available Dates" onChange={handleChange} required />
-      <input type="file" name="image" onChange={handleChange} required />
-      <button type="submit">Post E-Waste</button>
-    </form>
+    <div className="ewaste-post-form">
+      <h2>Post E-Waste</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Item Name"
+          value={itemName}
+          onChange={(e) => setItemName(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          placeholder="Quantity"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Condition"
+          value={condition}
+          onChange={(e) => setCondition(e.target.value)}
+          required
+        />
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          placeholder="Price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Available Dates"
+          value={availableDates}
+          onChange={(e) => setAvailableDates(e.target.value)}
+          required
+        />
+        <input
+          type="file"
+          onChange={(e) => setImage(e.target.files[0])}
+        />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
   );
 };
 

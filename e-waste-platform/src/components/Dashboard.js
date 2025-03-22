@@ -3,27 +3,44 @@ import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className="dashboard">
       <h2>Dashboard</h2>
       <nav>
-        <ul>
+        <ul className="dashboard-links">
           <li>
-            <Link to="/post-ewaste">Post E-Waste</Link>
+            <Link to="/post-ewaste" className="dashboard-link">
+              Post E-Waste
+            </Link>
           </li>
           <li>
-            <Link to="/search-materials">Search Materials</Link>
+            <Link to="/search-materials" className="dashboard-link">
+              Search Materials
+            </Link>
           </li>
           <li>
-            <Link to="/transactions">Transaction Overview</Link>
+            <Link to="/transactions" className="dashboard-link">
+              Transaction Overview
+            </Link>
           </li>
           <li>
-            <Link to="/messages">In-App Messaging</Link>
+            <Link to="/messages" className="dashboard-link">
+              In-App Messaging
+            </Link>
           </li>
           <li>
-            <Link to="/resources">Webinars and Resources</Link>
+            <Link to="/about" className="dashboard-link">
+              About Us
+            </Link>
           </li>
           <li>
-            <Link to="/my-materials">My Materials</Link> {/* Link to MyMaterials */}
+            <Link to="/raw-materials" className="dashboard-link">
+              Raw Materials
+            </Link>
+          </li>
+          <li>
+            <Link to="/my-materials" className="dashboard-link">
+              My Materials
+            </Link>
           </li>
         </ul>
       </nav>

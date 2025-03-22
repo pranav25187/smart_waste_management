@@ -13,10 +13,6 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // Debugging logs
-    console.log("Fetched user:", user);
-    console.log("Password hash from DB:", user.password_hash);
-
     // Validate password_hash
     if (!user.password_hash) {
       return res.status(400).json({ message: "Invalid user data" });
@@ -30,7 +26,6 @@ const login = async (req, res) => {
 
     // Login successful
     res.status(200).json({ message: "Login successful", user: user });
-
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
@@ -38,28 +33,20 @@ const login = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const { email, password, role, location } = req.body;
+  const { name, email, password, role, location, mobile_no } = req.body;
   try {
-    // Ensure required fields are provided
-    if (!email || !password || !role || !location) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert user into the database
+    // Fixed SQL query: Added missing placeholder for mobile_no
     await db.query(
-      "INSERT INTO Users (email, password_hash, role, location) VALUES (?, ?, ?, ?)",
-      [email, hashedPassword, role, location]
+      "INSERT INTO Users (name, email, password_hash, role, location, mobile_no) VALUES (?, ?, ?, ?, ?, ?)",
+      [name, email, hashedPassword, role, location, mobile_no]
     );
-
-    console.log("User created successfully:", { email, role, location });
 
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
     console.error("Signup error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
