@@ -1,0 +1,134 @@
+.landing-page {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: #333;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo img {
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .logo span {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #006400;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-links a {
+    color: #006400;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .nav-links a:hover {
+    text-decoration: underline;
+  }
+  
+  .hero-section {
+    text-align: center;
+    padding: 100px 20px;
+  }
+  
+  .hero-section h1 {
+    font-size: 3rem;
+    color: #006400;
+  }
+  
+  .hero-section p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 10px auto;
+    color: #444;
+  }
+  
+  .hero-section button {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    background-color: #006400;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .hero-section button:hover {
+    background-color: #004d00;
+  }
+  
+  .company-section {
+    text-align: center;
+    padding: 50px 20px;
+  }
+  
+  .company-section h2 {
+    color: #006400;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .company-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .company-section li {
+    margin: 10px 0;
+  }
+  
+  .company-section a {
+    text-decoration: none;
+    color: #006400;
+    font-weight: bold;
+  }
+  
+  .company-section a:hover {
+    text-decoration: underline;
+  }
+  
+  .footer {
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border-top: 1px solid #ccc;
+  }
+  
+  .footer p {
+    margin: 5px 0;
+  }
+  
+  .footer .social-links {
+    margin-top: 10px;
+  }
+  
+  .footer .social-links a {
+    margin: 0 10px;
+    display: inline-block;
+  }
+  
+  .footer .social-links img {
+    width: 24px;
+    height: 24px;
+  }

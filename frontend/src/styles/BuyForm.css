@@ -1,0 +1,39 @@
+.buy-form {
+    padding: 20px;
+  }
+  
+  .buy-form h2 {
+    color: #006400;
+    margin-bottom: 20px;
+  }
+  
+  .buy-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .buy-form label {
+    font-weight: bold;
+  }
+  
+  .buy-form input,
+  .buy-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  
+  .buy-form button {
+    padding: 10px 20px;
+    background-color: #006400;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .buy-form button:hover {
+    background-color: #004d00;
+  }

@@ -1,0 +1,311 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* About Section */
+.about-section {
+  padding: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.about-section h2 {
+  margin-bottom: 10px;
+}
+
+.about-section p {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Raw Materials Section */
+.raw-materials {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.raw-materials ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.raw-materials li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+.raw-materials button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.raw-materials button:hover {
+  background-color: #0056b3;
+}
+
+/* Search Page */
+.search-page {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-page input {
+  padding: 10px;
+  font-size: 16px;
+  width: 300px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.search-page button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.search-page button:hover {
+  background-color: #0056b3;
+}
+
+.search-page ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.search-page li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+/* My Materials */
+.my-materials {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.my-materials ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.my-materials li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+/* Raw Materials Page */
+.raw-materials-page {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.raw-materials-page ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.raw-materials-page li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+.raw-materials-page button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.raw-materials-page button:hover {
+  background-color: #0056b3;
+}
+
+/* Dashboard */
+.dashboard {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.metrics {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.metrics div {
+  text-align: center;
+}
+
+.metrics h3 {
+  margin-bottom: 10px;
+}
+
+.metrics p {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Request Material */
+.request-material {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.request-material h2 {
+  margin-bottom: 20px;
+}
+
+.request-material form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.request-material input {
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.request-material button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.request-material button:hover {
+  background-color: #0056b3;
+}
+
+/* Manufacturer Dashboard */
+.manufacturer-dashboard {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.manufacturer-dashboard ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.manufacturer-dashboard li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+/* Login/Signup Form */
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container input,
+.auth-container select,
+.auth-container button {
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.auth-container button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-container button:hover {
+  background-color: #0056b3;
+}
+
+.auth-container p {
+  text-align: center;
+}
+
+.auth-container .error {
+  color: red;
+  text-align: center;
+}
