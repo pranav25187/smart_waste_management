@@ -7,7 +7,6 @@ import "../styles/MyMaterials.css";
 const MyMaterials = () => {
   const [myMaterials, setMyMaterials] = useState([]);
   const navigate = useNavigate();
-  const userId = localStorage.getItem("user_id");
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -19,12 +18,10 @@ const MyMaterials = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:5000/api/materials/my", {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { user_id: userId },
+        const response = await axios.get("http://localhost:5000/api/ewaste/my", {
+          headers: { Authorization: `Bearer ${token}` }
         });
 
-        // Ensure the response data is an array
         if (Array.isArray(response.data)) {
           setMyMaterials(response.data);
         } else {
@@ -36,34 +33,32 @@ const MyMaterials = () => {
     };
 
     fetchMyMaterials();
-  }, [navigate, token, userId]);
+  }, [navigate, token]);
 
   return (
     <div className="my-materials">
       <Navbar />
-      <h2>My Materials</h2>
-      <div className="materials-grid">
-        {myMaterials.length === 0 ? (
-          <p className="no-materials">No materials available.</p>
-        ) : (
-          myMaterials.map((material) => (
-            <div key={material.material_id} className="material-card">
-              <img
-                src={`http://localhost:5000${material.image_path}`}
-                alt={material.material_type}
-                className="material-image"
-              />
-              <h3>{material.material_type}</h3>
-              <p>Condition: {material.condition}</p>
-              <p>Price: ${material.price_range}</p>
-              <p>Location: {material.location}</p>
-              <div className="material-actions">
-                <button className="buy-btn">Buy</button>
-                <button className="contact-btn">Contact</button>
+      <div className="my-materials-content">
+        <h2>My Materials</h2>
+        <div className="materials-grid">
+          {myMaterials.length === 0 ? (
+            <p className="no-materials">No materials posted yet.</p>
+          ) : (
+            myMaterials.map((material) => (
+              <div key={material.material_id} className="material-card">
+                <img
+                  src={`http://localhost:5000${material.image_path}`}
+                  alt={material.material_type}
+                  className="material-image"
+                />
+                <h3>{material.material_type}</h3>
+                <p>Condition: {material.condition_status}</p>
+                <p>Price: ₹{material.price}</p>
+                <p>Location: {material.location}</p>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

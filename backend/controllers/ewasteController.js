@@ -3,38 +3,40 @@ const db = require("../config/db");
 // Create E-Waste Post
 const createEwaste = async (req, res) => {
   try {
-    const { user_id, item_name, type, quantity, condition, description, price, available_dates } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null; // Save file path
+    const { material_type, description, quantity, unit, condition_status, price, location, available_dates } = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const posted_by = req.user.id; // From auth middleware
 
-    console.log("Uploaded Image Path:", imagePath); // Debugging
-
-    if (!user_id || !item_name || !type || !quantity || !condition || !description || !price || !available_dates) {
+    if (!material_type || !quantity || !unit || !condition_status || !price || !location || !available_dates) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Insert into EwastePosts
-    await db.query(
-      "INSERT INTO EwastePosts (user_id, item_name, type, quantity, `condition`, description, price, available_dates, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [user_id, item_name, type, quantity, condition, description, price, available_dates, imagePath]
+    const [result] = await db.query(
+      `INSERT INTO Materials 
+       (material_type, description, quantity, unit, condition_status, price, location, available_dates, image_path, posted_by) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [material_type, description, quantity, unit, condition_status, price, location, available_dates, imagePath, posted_by]
     );
 
-    // Insert into Materials
-    await db.query(
-      "INSERT INTO Materials (material_type, location, availability, `condition`, price_range, posted_by, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [type, "Default Location", true, condition, price, user_id, imagePath]
-    );
-
-    res.status(201).json({ message: "E-Waste posted successfully" });
+    res.status(201).json({ 
+      message: "Material posted successfully",
+      material_id: result.insertId
+    });
   } catch (err) {
-    console.error("Error posting e-waste:", err);
-    res.status(500).json({ message: "Failed to post e-waste. Please try again.", error: err.message });
+    console.error("Error posting material:", err);
+    res.status(500).json({ message: "Failed to post material", error: err.message });
   }
 };
 
 // Get All Materials
 const getEwaste = async (req, res) => {
   try {
-    const [materials] = await db.query("SELECT * FROM Materials");
+    const [materials] = await db.query(
+      `SELECT m.*, u.name as seller_name 
+       FROM Materials m 
+       JOIN Users u ON m.posted_by = u.user_id 
+       ORDER BY m.created_at DESC`
+    );
     res.status(200).json(materials);
   } catch (err) {
     console.error("Error fetching materials:", err);
@@ -46,66 +48,99 @@ const getEwaste = async (req, res) => {
 const getEwasteById = async (req, res) => {
   const { id } = req.params;
   try {
-    const [material] = await db.query("SELECT * FROM Materials WHERE material_id = ?", [id]);
-    if (material.length === 0) {
+    const [materials] = await db.query(
+      `SELECT m.*, u.name as seller_name 
+       FROM Materials m 
+       JOIN Users u ON m.posted_by = u.user_id 
+       WHERE m.material_id = ?`,
+      [id]
+    );
+    
+    if (materials.length === 0) {
       return res.status(404).json({ message: "Material not found" });
     }
-    res.status(200).json(material[0]);
+    res.status(200).json(materials[0]);
   } catch (err) {
     console.error("Error fetching material:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// Update E-Waste Post
+// Update Material
 const updateEwaste = async (req, res) => {
   const { id } = req.params;
-  const { item_name, type, quantity, condition, description, price, available_dates } = req.body;
+  const { material_type, description, quantity, unit, condition_status, price, location, available_dates } = req.body;
+  const userId = req.user.id;
+
   try {
-    // Update EwastePosts
-    await db.query(
-      "UPDATE EwastePosts SET item_name = ?, type = ?, quantity = ?, `condition` = ?, description = ?, price = ?, available_dates = ? WHERE post_id = ?",
-      [item_name, type, quantity, condition, description, price, available_dates, id]
+    // Check if user owns the material
+    const [materials] = await db.query(
+      "SELECT posted_by FROM Materials WHERE material_id = ?",
+      [id]
     );
 
-    // Update Materials
+    if (materials.length === 0) {
+      return res.status(404).json({ message: "Material not found" });
+    }
+
+    if (materials[0].posted_by !== userId) {
+      return res.status(403).json({ message: "Not authorized to update this material" });
+    }
+
     await db.query(
-      "UPDATE Materials SET material_type = ?, `condition` = ?, price_range = ? WHERE material_id = ?",
-      [type, condition, price, id]
+      `UPDATE Materials 
+       SET material_type = ?, description = ?, quantity = ?, unit = ?, 
+           condition_status = ?, price = ?, location = ?, available_dates = ?
+       WHERE material_id = ?`,
+      [material_type, description, quantity, unit, condition_status, price, location, available_dates, id]
     );
 
-    res.status(200).json({ message: "E-Waste updated successfully" });
+    res.status(200).json({ message: "Material updated successfully" });
   } catch (err) {
-    console.error("Error updating e-waste:", err);
+    console.error("Error updating material:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// Delete E-Waste Post
+// Delete Material
 const deleteEwaste = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user.id;
+
   try {
-    // Delete from EwastePosts
-    await db.query("DELETE FROM EwastePosts WHERE post_id = ?", [id]);
+    // Check if user owns the material
+    const [materials] = await db.query(
+      "SELECT posted_by FROM Materials WHERE material_id = ?",
+      [id]
+    );
 
-    // Delete from Materials
+    if (materials.length === 0) {
+      return res.status(404).json({ message: "Material not found" });
+    }
+
+    if (materials[0].posted_by !== userId) {
+      return res.status(403).json({ message: "Not authorized to delete this material" });
+    }
+
     await db.query("DELETE FROM Materials WHERE material_id = ?", [id]);
-
-    res.status(200).json({ message: "E-Waste deleted successfully" });
+    res.status(200).json({ message: "Material deleted successfully" });
   } catch (err) {
-    console.error("Error deleting e-waste:", err);
+    console.error("Error deleting material:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
 // Get Materials Posted by the Logged-in User
 const getMyMaterials = async (req, res) => {
-  const userId = req.user.id; // Extracted from the token in authMiddleware
-  console.log("Extracted User ID from Token:", req.user);
+  const userId = req.user.id;
 
   try {
     const [materials] = await db.query(
-      "SELECT * FROM Materials WHERE posted_by = ?",
+      `SELECT m.*, u.name as seller_name 
+       FROM Materials m 
+       JOIN Users u ON m.posted_by = u.user_id 
+       WHERE m.posted_by = ?
+       ORDER BY m.created_at DESC`,
       [userId]
     );
 
@@ -116,12 +151,11 @@ const getMyMaterials = async (req, res) => {
   }
 };
 
-// Export all functions
 module.exports = {
   createEwaste,
   getEwaste,
   getEwasteById,
   updateEwaste,
   deleteEwaste,
-  getMyMaterials, // Ensure this is exported
+  getMyMaterials
 };

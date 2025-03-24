@@ -3,15 +3,14 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 import About from "./components/About";
 import ContactUs from "./components/ContactUs";
-import LoginSignup from "./components/LoginSignup";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import EwastePostForm from "./components/EwastePostForm";
 import MaterialDetails from "./components/MaterialDetails";
 import TransactionHub from "./components/TransactionHub";
-import Messaging from "./components/Messaging";
+import Communication from "./components/Communication";
 import MyMaterials from "./components/MyMaterials";
-import BuyForm from "./components/BuyForm";
-import ConfirmOrder from "./components/ConfirmOrder";
 
 function App() {
   return (
@@ -20,15 +19,14 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="/login" element={<LoginSignup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/post-ewaste" element={<EwastePostForm />} />
+        <Route path="/post-material" element={<EwastePostForm />} />
         <Route path="/material/:id" element={<MaterialDetails />} />
-        <Route path="/transactions" element={<TransactionHub />} />
-        <Route path="/messages" element={<Messaging />} />
+        <Route path="/transaction-hub" element={<TransactionHub />} />
+        <Route path="/communication" element={<Communication />} />
         <Route path="/my-materials" element={<MyMaterials />} />
-        <Route path="/buy/:id" element={<BuyForm />} />
-        <Route path="/confirm-order" element={<ConfirmOrder />} />
       </Routes>
     </Router>
   );

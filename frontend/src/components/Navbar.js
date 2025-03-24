@@ -1,31 +1,59 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/Navbar.css";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../styles/Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem("user_id");
+  const [unreadCount, setUnreadCount] = useState(0);
+  const userId = localStorage.getItem('user_id');
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (token && userId) {
+      fetchUnreadCount();
+    }
+  }, [token, userId]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/messages/${userId}/unread`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUnreadCount(response.data.count);
+    } catch (error) {
+      console.error('Error fetching unread count:', error);
+    }
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem("user_id");
-    navigate("/");
+    localStorage.removeItem('token');
+    localStorage.removeItem('user_id');
+    navigate('/');
   };
+
+  if (!token) return null;
 
   return (
     <nav className="navbar">
-      <div className="logo">
-        <Link to="/dashboard">Smart Waste Management</Link>
+      <div className="nav-brand">
+        <Link to="/dashboard">E-Waste Marketplace</Link>
       </div>
-      {isLoggedIn && (
-        <ul className="nav-links">
-          <li><Link to="/dashboard">Home</Link></li>
-          <li><Link to="/post-ewaste">Post E-Waste</Link></li>
-          <li><Link to="/my-materials">My Materials</Link></li>
-          <li><Link to="/messages">Communication</Link></li>
-          <li><Link to="/transactions">Transaction Hub</Link></li>
-          <li><button onClick={handleLogout}>Logout</button></li>
-        </ul>
-      )}
+      <div className="nav-links">
+        <Link to="/dashboard">Home</Link>
+        <Link to="/post-material">Post Material</Link>
+        <Link to="/my-materials">My Materials</Link>
+        <Link to="/communication" className="nav-link-with-badge">
+          Communication
+          {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+        </Link>
+        <Link to="/transaction-hub">Transaction Hub</Link>
+      </div>
+      <div className="nav-user">
+        <button onClick={handleLogout} className="logout-btn">
+          Logout
+        </button>
+      </div>
     </nav>
   );
 };
